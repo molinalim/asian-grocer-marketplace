@@ -6,17 +6,19 @@ interface PromotionalBannerProps {
   description: string;
   backgroundImage: string;
   link: string;
+  className?: string; // Add optional className prop
 }
 
 const PromotionalBanner: React.FC<PromotionalBannerProps> = ({
   title,
   description,
   backgroundImage,
-  link
+  link,
+  className = '' // Provide default empty string
 }) => {
   return (
     <div
-      className="relative rounded-lg overflow-hidden h-64 md:h-80 my-10"
+      className={`relative rounded-lg overflow-hidden h-64 md:h-80 my-10 ${className}`}
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${backgroundImage})`,
         backgroundSize: 'cover',
