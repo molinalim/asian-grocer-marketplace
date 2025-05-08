@@ -26,6 +26,16 @@ const Index: React.FC = () => {
         
         <FeaturedCategories />
         
+        {/* Wavy section divider */}
+        <div className="relative h-16 overflow-hidden bg-[#F9FCF7]">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full">
+            <path 
+              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V56.44Z" 
+              fill="#F2FCE2"
+            ></path>
+          </svg>
+        </div>
+        
         <section className="py-12 bg-[#F2FCE2]">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 text-primary">Featured Products</h2>
@@ -42,26 +52,55 @@ const Index: React.FC = () => {
           </div>
         </section>
         
+        {/* Wavy section divider */}
+        <div className="relative h-16 overflow-hidden bg-[#F2FCE2]">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full">
+            <path 
+              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V56.44Z" 
+              fill="#F9FCF7"
+            ></path>
+          </svg>
+        </div>
+        
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-primary rounded-lg p-6 text-center text-white">
+            <div className="bg-[#8CC63F] rounded-lg p-6 text-center text-white overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 relative">
+              <div className="mb-4 mx-auto w-24 h-24 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
+                <img src="https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=1000&auto=format&fit=crop" alt="Breakfast" className="w-16 h-16 object-contain" />
+              </div>
               <h3 className="text-xl font-bold mb-3">Breakfast</h3>
-              <button className="border border-white rounded-full px-4 py-1 text-sm hover:bg-white hover:text-primary transition-colors">CLICK HERE</button>
+              <button className="border border-white rounded-full px-4 py-1 text-sm hover:bg-white hover:text-[#8CC63F] transition-colors">CLICK HERE</button>
             </div>
             
-            <div className="bg-[#F58634] rounded-lg p-6 text-center text-white">
+            <div className="bg-[#F58634] rounded-lg p-6 text-center text-white overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 relative">
+              <div className="mb-4 mx-auto w-24 h-24 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
+                <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?q=80&w=1000&auto=format&fit=crop" alt="Dessert Recipes" className="w-16 h-16 object-contain" />
+              </div>
               <h3 className="text-xl font-bold mb-3">Dessert Recipes</h3>
               <button className="border border-white rounded-full px-4 py-1 text-sm hover:bg-white hover:text-[#F58634] transition-colors">CLICK HERE</button>
             </div>
             
-            <div className="bg-primary rounded-lg p-6 text-center text-white">
+            <div className="bg-[#8CC63F] rounded-lg p-6 text-center text-white overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 relative">
+              <div className="mb-4 mx-auto w-24 h-24 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
+                <img src="https://images.unsplash.com/photo-1547592180-85f173990554?q=80&w=1000&auto=format&fit=crop" alt="Dinner Recipes" className="w-16 h-16 object-contain" />
+              </div>
               <h3 className="text-xl font-bold mb-3">Dinner Recipes</h3>
-              <button className="border border-white rounded-full px-4 py-1 text-sm hover:bg-white hover:text-primary transition-colors">CLICK HERE</button>
+              <button className="border border-white rounded-full px-4 py-1 text-sm hover:bg-white hover:text-[#8CC63F] transition-colors">CLICK HERE</button>
             </div>
           </div>
         </div>
         
-        <div className="bg-[#C1E8B7] py-16 mt-8">
+        {/* Wavy section divider */}
+        <div className="relative h-16 overflow-hidden bg-[#F9FCF7]">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full transform rotate-180">
+            <path 
+              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V56.44Z" 
+              fill="#C1E8B7"
+            ></path>
+          </svg>
+        </div>
+        
+        <div className="bg-[#C1E8B7] py-16">
           <div className="container mx-auto px-4">
             <PromotionalBanner
               title="Fresh Organic Vegetables"
@@ -71,6 +110,16 @@ const Index: React.FC = () => {
               className="bg-transparent"
             />
           </div>
+        </div>
+        
+        {/* Wavy section divider */}
+        <div className="relative h-16 overflow-hidden bg-[#C1E8B7]">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full">
+            <path 
+              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V56.44Z" 
+              fill="#F9FCF7"
+            ></path>
+          </svg>
         </div>
         
         <section className="py-12">

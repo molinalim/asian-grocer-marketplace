@@ -53,18 +53,28 @@
   }
 
   .btn-primary {
-    @apply bg-primary hover:bg-primary-hover text-primary-foreground px-4 py-2 rounded-full transition-colors;
+    @apply bg-[#8CC63F] hover:bg-[#7AB62F] text-white px-4 py-2 rounded-full transition-colors;
   }
 
   .btn-secondary {
-    @apply bg-secondary hover:bg-secondary-hover text-secondary-foreground px-4 py-2 rounded-full transition-colors;
+    @apply bg-[#F58634] hover:bg-[#E07A30] text-white px-4 py-2 rounded-full transition-colors;
   }
 
   .btn-accent {
-    @apply bg-accent hover:bg-accent-hover text-accent-foreground px-4 py-2 rounded-full transition-colors;
+    @apply bg-[#C1E8B7] hover:bg-[#AFD6A5] text-[#333333] px-4 py-2 rounded-full transition-colors;
   }
 
   .product-grid {
     @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6;
+  }
+  
+  .section-wave {
+    @apply relative;
+  }
+  
+  .section-wave::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-16 bg-no-repeat bg-cover bg-center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V56.44Z' fill='%23F9FCF7'/%3E%3C/svg%3E");
   }
 }
