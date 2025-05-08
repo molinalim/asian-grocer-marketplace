@@ -5,24 +5,25 @@ import { Button } from '@/components/ui/button';
 
 const HomeHero: React.FC = () => {
   return (
-    <div className="relative bg-store-pattern bg-cover bg-center py-20 md:py-32">
-      <div className="container mx-auto px-4">
-        <div className="max-w-lg">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Authentic Asian Groceries
+    <div className="relative bg-[#c1e8b7] py-12 md:py-20">
+      <div className="container mx-auto px-4 flex flex-col-reverse md:flex-row items-center">
+        <div className="md:w-1/2 md:pr-8">
+          <h2 className="text-2xl font-medium text-gray-700 mb-2">
+            YOUR FAVOURITE
+          </h2>
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+            Fresh<br />Vegetables
           </h1>
-          <p className="text-lg text-white opacity-90 mb-8">
-            Discover a wide selection of premium ingredients and foods from all across Asia. 
-            Fresh produce, pantry staples, snacks, and more.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <Button asChild className="bg-primary hover:bg-primary-hover text-white px-8 py-6">
-              <Link to="/products">Shop Now</Link>
-            </Button>
-            <Button asChild variant="outline" className="bg-white text-primary border-white hover:bg-opacity-90 px-8 py-6">
-              <Link to="/about">Learn More</Link>
-            </Button>
-          </div>
+          <Button asChild className="bg-[#F58634] hover:bg-[#e07a30] border-none rounded-full text-white px-8 py-6">
+            <Link to="/products">SHOP NOW</Link>
+          </Button>
+        </div>
+        <div className="md:w-1/2 mb-8 md:mb-0">
+          <img 
+            src="/lovable-uploads/53ec02e4-b9b4-4983-8ed9-a8582a41ee09.png" 
+            alt="Fresh vegetables arrangement" 
+            className="w-full h-auto object-contain"
+          />
         </div>
       </div>
     </div>

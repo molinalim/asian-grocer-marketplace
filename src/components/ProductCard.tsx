@@ -50,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   return (
-    <div className="product-card group">
+    <div className="bg-white bg-opacity-80 backdrop-blur-sm rounded-lg shadow-md p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg">
       <div className="relative mb-4 overflow-hidden rounded-md">
         <img
           src={product.imageUrl}
@@ -62,7 +62,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           className="absolute top-2 right-2 p-1.5 bg-white bg-opacity-80 rounded-full hover:bg-opacity-100 transition-colors"
           aria-label="Add to wishlist"
         >
-          <Heart size={18} />
+          <Heart size={18} className="text-primary" />
         </button>
       </div>
       <div>
@@ -72,7 +72,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </p>
         <Button
           onClick={handleAddToCart}
-          className="w-full flex items-center justify-center gap-2"
+          className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover rounded-full"
         >
           <ShoppingCart size={18} /> Add to Cart
         </Button>

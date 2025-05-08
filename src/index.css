@@ -45,7 +45,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-poppins;
+    @apply bg-[#F9FCF7] text-foreground font-poppins;
   }
 
   .product-card {
@@ -53,15 +53,15 @@
   }
 
   .btn-primary {
-    @apply bg-primary hover:bg-primary-hover text-primary-foreground px-4 py-2 rounded-md transition-colors;
+    @apply bg-primary hover:bg-primary-hover text-primary-foreground px-4 py-2 rounded-full transition-colors;
   }
 
   .btn-secondary {
-    @apply bg-secondary hover:bg-secondary-hover text-secondary-foreground px-4 py-2 rounded-md transition-colors;
+    @apply bg-secondary hover:bg-secondary-hover text-secondary-foreground px-4 py-2 rounded-full transition-colors;
   }
 
   .btn-accent {
-    @apply bg-accent hover:bg-accent-hover text-accent-foreground px-4 py-2 rounded-md transition-colors;
+    @apply bg-accent hover:bg-accent-hover text-accent-foreground px-4 py-2 rounded-full transition-colors;
   }
 
   .product-grid {

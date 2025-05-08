@@ -26,23 +26,23 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#4CAF50',
-					hover: '#43A047',
+					DEFAULT: '#8CC63F', // Updated green color
+					hover: '#7AB62F',
 					foreground: '#FFFFFF'
 				},
 				secondary: {
-					DEFAULT: '#E53935',
-					hover: '#D32F2F',
+					DEFAULT: '#F58634', // Orange color
+					hover: '#E07A30',
 					foreground: '#FFFFFF'
 				},
 				accent: {
-					DEFAULT: '#FFD700',
-					hover: '#FFC400',
+					DEFAULT: '#C1E8B7', // Light green accent
+					hover: '#AFD6A5',
 					foreground: '#000000'
 				},
 				neutral: {
-					DEFAULT: '#F5F5F5',
-					hover: '#E0E0E0',
+					DEFAULT: '#F9FCF7', // Very light green
+					hover: '#E8F5E2',
 					foreground: '#333333'
 				},
 				destructive: {
@@ -99,4 +99,3 @@ export default {
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-

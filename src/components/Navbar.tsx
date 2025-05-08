@@ -50,7 +50,7 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold text-primary">Asian<span className="text-secondary">Grocer</span></span>
+            <span className="text-2xl font-bold text-primary">Fresh<span className="text-secondary">Food</span></span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -65,12 +65,12 @@ const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center space-x-4">
             <button
               onClick={toggleSearch}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors text-primary"
               aria-label="Search"
             >
               <Search size={20} />
             </button>
-            <Link to="/wishlist" className="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
+            <Link to="/wishlist" className="p-2 hover:bg-gray-100 rounded-full transition-colors relative text-primary">
               <Heart size={20} />
               {wishlistItems.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-secondary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
@@ -78,7 +78,7 @@ const Navbar: React.FC = () => {
                 </span>
               )}
             </Link>
-            <Link to="/cart" className="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
+            <Link to="/cart" className="p-2 hover:bg-gray-100 rounded-full transition-colors relative text-primary">
               <ShoppingCart size={20} />
               {cartItemCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-secondary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
@@ -91,7 +91,7 @@ const Navbar: React.FC = () => {
             <div className="relative">
               <button
                 onClick={toggleUserMenu}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors text-primary"
                 aria-label="Account"
               >
                 <User size={20} />
@@ -170,7 +170,7 @@ const Navbar: React.FC = () => {
 
           {/* Mobile Menu Button */}
           <div className="flex items-center space-x-2 md:hidden">
-            <Link to="/cart" className="p-2 relative">
+            <Link to="/cart" className="p-2 relative text-primary">
               <ShoppingCart size={20} />
               {cartItemCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-secondary text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
@@ -180,7 +180,7 @@ const Navbar: React.FC = () => {
             </Link>
             <button
               onClick={toggleMenu}
-              className="p-2"
+              className="p-2 text-primary"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
