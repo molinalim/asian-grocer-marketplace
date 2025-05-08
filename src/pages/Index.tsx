@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -9,16 +8,17 @@ import PromotionalBanner from '@/components/PromotionalBanner';
 import { products } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
-
 const Index: React.FC = () => {
-  const { addItem } = useCart();
-  const { toggleItem } = useWishlist();
-  
+  const {
+    addItem
+  } = useCart();
+  const {
+    toggleItem
+  } = useWishlist();
+
   // Get featured products (first 8)
   const featuredProducts = products.slice(0, 8);
-  
-  return (
-    <div className="min-h-screen flex flex-col bg-[#F9FCF7]">
+  return <div className="min-h-screen flex flex-col bg-[#F9FCF7]">
       <Navbar />
       
       <main className="flex-grow">
@@ -29,10 +29,7 @@ const Index: React.FC = () => {
         {/* Wavy section divider */}
         <div className="relative h-16 overflow-hidden bg-[#F9FCF7]">
           <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full">
-            <path 
-              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V56.44Z" 
-              fill="#F2FCE2"
-            ></path>
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V56.44Z" fill="#F2FCE2"></path>
           </svg>
         </div>
         
@@ -40,14 +37,7 @@ const Index: React.FC = () => {
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 text-primary">Featured Products</h2>
             <div className="product-grid">
-              {featuredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onAddToCart={addItem}
-                  onAddToWishlist={toggleItem}
-                />
-              ))}
+              {featuredProducts.map(product => <ProductCard key={product.id} product={product} onAddToCart={addItem} onAddToWishlist={toggleItem} />)}
             </div>
           </div>
         </section>
@@ -55,14 +45,11 @@ const Index: React.FC = () => {
         {/* Wavy section divider */}
         <div className="relative h-16 overflow-hidden bg-[#F2FCE2]">
           <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full">
-            <path 
-              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V56.44Z" 
-              fill="#F9FCF7"
-            ></path>
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V56.44Z" fill="#F9FCF7"></path>
           </svg>
         </div>
         
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 bg-[f2fce3] bg-[#f2fce3]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-[#8CC63F] rounded-lg p-6 text-center text-white overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 relative">
               <div className="mb-4 mx-auto w-24 h-24 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
@@ -93,32 +80,20 @@ const Index: React.FC = () => {
         {/* Wavy section divider */}
         <div className="relative h-16 overflow-hidden bg-[#F9FCF7]">
           <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full transform rotate-180">
-            <path 
-              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V56.44Z" 
-              fill="#C1E8B7"
-            ></path>
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V56.44Z" fill="#C1E8B7"></path>
           </svg>
         </div>
         
         <div className="bg-[#C1E8B7] py-16">
           <div className="container mx-auto px-4">
-            <PromotionalBanner
-              title="Fresh Organic Vegetables"
-              description="Discover a wide selection of premium vegetables and foods from all across Asia."
-              backgroundImage=""
-              link="/products?category=vegetables"
-              className="bg-transparent"
-            />
+            <PromotionalBanner title="Fresh Organic Vegetables" description="Discover a wide selection of premium vegetables and foods from all across Asia." backgroundImage="" link="/products?category=vegetables" className="bg-transparent" />
           </div>
         </div>
         
         {/* Wavy section divider */}
         <div className="relative h-16 overflow-hidden bg-[#C1E8B7]">
           <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute top-0 left-0 w-full h-full">
-            <path 
-              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V56.44Z" 
-              fill="#F9FCF7"
-            ></path>
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V56.44Z" fill="#F9FCF7"></path>
           </svg>
         </div>
         
@@ -171,8 +146,6 @@ const Index: React.FC = () => {
       </main>
       
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
