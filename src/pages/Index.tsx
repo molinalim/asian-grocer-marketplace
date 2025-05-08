@@ -33,7 +33,7 @@ const Index: React.FC = () => {
           </svg>
         </div>
         
-        <section className="py-12 bg-[#F2FCE2]">
+        <section className="py-12 bg-[#f2fce3]">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold mb-8 text-primary">Featured Products</h2>
             <div className="product-grid">
