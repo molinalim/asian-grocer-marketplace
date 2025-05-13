@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Camera, X } from "lucide-react";
+import { Camera, X, ScanText } from "lucide-react";
 
 const AdminProductForm: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -25,6 +25,7 @@ const AdminProductForm: React.FC = () => {
   
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showScanner, setShowScanner] = useState(false);
+  const [scanTarget, setScanTarget] = useState<'name' | 'barcode'>('barcode');
   const [stream, setStream] = useState<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -119,7 +120,8 @@ const AdminProductForm: React.FC = () => {
     navigate('/admin/products');
   };
 
-  const startScanner = async () => {
+  const startScanner = async (target: 'name' | 'barcode') => {
+    setScanTarget(target);
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment' }
@@ -163,19 +165,40 @@ const AdminProductForm: React.FC = () => {
     // For this demo, we'll simulate finding text in the image with a loading state
     toast({
       title: "Processing Image",
-      description: "Scanning for text...",
+      description: `Scanning for ${scanTarget === 'name' ? 'product name' : 'number'}...`,
     });
 
     setTimeout(() => {
       // Simulate OCR result - in a real app, this would come from an OCR API
-      // For demo purposes, we'll generate a random number
-      const randomNum = Math.floor(Math.random() * 9000000000) + 1000000000;
-      setForm(prev => ({ ...prev, barcode: randomNum.toString() }));
+      let ocrResult;
       
-      toast({
-        title: "Text Detected",
-        description: `Number ${randomNum} has been captured.`,
-      });
+      if (scanTarget === 'name') {
+        // Simulate detecting product names
+        const sampleProducts = [
+          "Premium Japanese Green Tea", 
+          "Organic Rice Noodles", 
+          "Thai Curry Paste", 
+          "Korean Kimchi",
+          "Asian Snack Mix"
+        ];
+        ocrResult = sampleProducts[Math.floor(Math.random() * sampleProducts.length)];
+        
+        setForm(prev => ({ ...prev, name: ocrResult }));
+        toast({
+          title: "Text Detected",
+          description: `Product name "${ocrResult}" has been captured.`,
+        });
+      } else {
+        // Simulate number detection for barcode
+        const randomNum = Math.floor(Math.random() * 9000000000) + 1000000000;
+        ocrResult = randomNum.toString();
+        
+        setForm(prev => ({ ...prev, barcode: ocrResult }));
+        toast({
+          title: "Text Detected",
+          description: `Number ${ocrResult} has been captured.`,
+        });
+      }
       
       stopScanner();
     }, 1500);
@@ -200,13 +223,24 @@ const AdminProductForm: React.FC = () => {
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
             Product Name
           </label>
-          <Input
-            id="name"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            className={errors.name ? 'border-red-500' : ''}
-          />
+          <div className="flex items-center space-x-2">
+            <Input
+              id="name"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              className={`flex-1 ${errors.name ? 'border-red-500' : ''}`}
+            />
+            <Button 
+              type="button" 
+              onClick={() => startScanner('name')}
+              disabled={showScanner}
+              variant="outline" 
+              className="bg-[#F58634] hover:bg-[#e07a30] text-white"
+            >
+              <ScanText size={18} />
+            </Button>
+          </div>
           {errors.name && (
             <p className="mt-1 text-sm text-red-500">{errors.name}</p>
           )}
@@ -290,7 +324,7 @@ const AdminProductForm: React.FC = () => {
             />
             <Button 
               type="button" 
-              onClick={startScanner}
+              onClick={() => startScanner('barcode')}
               disabled={showScanner}
               variant="outline" 
               className="bg-[#F58634] hover:bg-[#e07a30] text-white"
@@ -304,7 +338,9 @@ const AdminProductForm: React.FC = () => {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
             <div className="bg-white p-4 rounded-lg w-full max-w-lg">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">Scan Text/Number</h3>
+                <h3 className="text-lg font-medium">
+                  {scanTarget === 'name' ? 'Scan Product Name' : 'Scan Text/Number'}
+                </h3>
                 <Button 
                   variant="ghost" 
                   size="sm" 
@@ -331,7 +367,9 @@ const AdminProductForm: React.FC = () => {
                 <div className="absolute inset-y-0 left-1/2 w-0.5 bg-green-500 opacity-70"></div>
               </div>
               
-              <p className="text-sm text-gray-500 mb-4">Position the text within the frame and take a snapshot</p>
+              <p className="text-sm text-gray-500 mb-4">
+                Position the {scanTarget === 'name' ? 'product name' : 'text'} within the frame and take a snapshot
+              </p>
               
               <div className="flex justify-center">
                 <Button 
