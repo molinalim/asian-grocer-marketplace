@@ -1,4 +1,3 @@
-
 import { Product } from '../components/ProductCard';
 
 export const products: Product[] = [
@@ -8,7 +7,8 @@ export const products: Product[] = [
     price: 14.99,
     imageUrl: "https://images.unsplash.com/photo-1586201375800-0605a5c4d40b?q=80&w=1470&auto=format&fit=crop",
     category: "pantry",
-    description: "High-quality jasmine rice imported directly from Thailand. Perfect for all your Asian dishes with its fragrant aroma and sticky texture when cooked."
+    description: "High-quality jasmine rice imported directly from Thailand. Perfect for all your Asian dishes with its fragrant aroma and sticky texture when cooked.",
+    barcode: "8901234567890"
   },
   {
     id: "2",

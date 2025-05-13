@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ export interface Product {
   imageUrl: string;
   category: string;
   description: string;
+  barcode?: string; // Added barcode as optional property
 }
 
 interface ProductCardProps {
