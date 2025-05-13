@@ -315,12 +315,13 @@ const AdminProductForm: React.FC = () => {
                 </Button>
               </div>
               
-              <div className="relative bg-gray-100 mb-4 rounded overflow-hidden">
+              <div className="relative bg-black mb-4 rounded overflow-hidden">
                 <video 
                   ref={videoRef} 
-                  className="w-full aspect-video object-cover" 
+                  className="w-full h-64 object-cover" 
                   autoPlay 
                   playsInline
+                  style={{ display: 'block' }}
                 />
                 <canvas 
                   ref={canvasRef} 
