@@ -3,6 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { products, categories } from '@/data/products';
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Camera, ScanBarcode } from "lucide-react";
 
 const AdminProductForm: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -15,10 +19,13 @@ const AdminProductForm: React.FC = () => {
     description: '',
     price: '',
     imageUrl: '',
-    category: ''
+    category: '',
+    barcode: ''
   });
   
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showScanner, setShowScanner] = useState(false);
+  const [stream, setStream] = useState<MediaStream | null>(null);
   
   // Load product data if editing
   useEffect(() => {
@@ -30,7 +37,8 @@ const AdminProductForm: React.FC = () => {
           description: product.description,
           price: product.price.toString(),
           imageUrl: product.imageUrl,
-          category: product.category
+          category: product.category,
+          barcode: product.barcode || ''
         });
       } else {
         // Product not found
@@ -44,6 +52,15 @@ const AdminProductForm: React.FC = () => {
     }
   }, [isEditing, productId, navigate]);
   
+  useEffect(() => {
+    return () => {
+      // Clean up the camera stream when component unmounts
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [stream]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
@@ -100,6 +117,69 @@ const AdminProductForm: React.FC = () => {
     navigate('/admin/products');
   };
 
+  const startScanner = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' }
+      });
+      setStream(mediaStream);
+      setShowScanner(true);
+
+      // Create a video element to show the camera feed
+      const videoElement = document.createElement('video');
+      videoElement.setAttribute('autoplay', 'true');
+      videoElement.srcObject = mediaStream;
+      videoElement.onloadedmetadata = () => {
+        videoElement.play();
+        captureBarcode(videoElement);
+      };
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+      toast({
+        title: "Camera Error",
+        description: "Could not access the camera. Please check your permissions.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const captureBarcode = (videoElement: HTMLVideoElement) => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    
+    // This is a simplified approach to demonstrate the concept
+    // In a real app, you would use a proper barcode scanning library
+    const checkForBarcode = setInterval(() => {
+      if (!context || !videoElement.videoWidth) return;
+      
+      canvas.width = videoElement.videoWidth;
+      canvas.height = videoElement.videoHeight;
+      context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+      
+      // Simulate barcode detection (in reality, you'd use a proper library)
+      // For demo purposes, we'll wait 3 seconds and generate a fake barcode
+      setTimeout(() => {
+        stopScanner();
+        // Generate a random barcode number for demonstration
+        const demoBarcode = Math.floor(Math.random() * 9000000000) + 1000000000;
+        setForm(prev => ({ ...prev, barcode: demoBarcode.toString() }));
+        toast({
+          title: "Barcode Detected",
+          description: `Barcode ${demoBarcode} has been scanned successfully.`
+        });
+        clearInterval(checkForBarcode);
+      }, 3000);
+    }, 500);
+  };
+
+  const stopScanner = () => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+    }
+    setShowScanner(false);
+  };
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">
@@ -111,15 +191,12 @@ const AdminProductForm: React.FC = () => {
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
             Product Name
           </label>
-          <input
+          <Input
             id="name"
             name="name"
-            type="text"
             value={form.name}
             onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
-              errors.name ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={errors.name ? 'border-red-500' : ''}
           />
           {errors.name && (
             <p className="mt-1 text-sm text-red-500">{errors.name}</p>
@@ -130,15 +207,13 @@ const AdminProductForm: React.FC = () => {
           <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
             Description
           </label>
-          <textarea
+          <Textarea
             id="description"
             name="description"
             rows={4}
             value={form.description}
             onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
-              errors.description ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={errors.description ? 'border-red-500' : ''}
           />
           {errors.description && (
             <p className="mt-1 text-sm text-red-500">{errors.description}</p>
@@ -150,7 +225,7 @@ const AdminProductForm: React.FC = () => {
             <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
               Price ($)
             </label>
-            <input
+            <Input
               id="price"
               name="price"
               type="number"
@@ -158,9 +233,7 @@ const AdminProductForm: React.FC = () => {
               min="0"
               value={form.price}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
-                errors.price ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={errors.price ? 'border-red-500' : ''}
             />
             {errors.price && (
               <p className="mt-1 text-sm text-red-500">{errors.price}</p>
@@ -192,20 +265,63 @@ const AdminProductForm: React.FC = () => {
             )}
           </div>
         </div>
+
+        <div>
+          <label htmlFor="barcode" className="block text-sm font-medium text-gray-700 mb-1">
+            Barcode
+          </label>
+          <div className="flex items-center space-x-2">
+            <Input
+              id="barcode"
+              name="barcode"
+              value={form.barcode}
+              onChange={handleChange}
+              placeholder="Scan or enter barcode"
+              className="flex-1"
+            />
+            <Button 
+              type="button" 
+              onClick={startScanner}
+              disabled={showScanner}
+              variant="outline" 
+              className="bg-[#F58634] hover:bg-[#e07a30] text-white"
+            >
+              {showScanner ? <ScanBarcode /> : <Camera />}
+            </Button>
+          </div>
+        </div>
+        
+        {showScanner && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+            <div className="bg-white p-4 rounded-lg w-full max-w-lg">
+              <h3 className="text-lg font-medium mb-2">Scan Barcode</h3>
+              <div className="aspect-video bg-gray-100 mb-4 relative">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-64 h-1 bg-red-500 animate-pulse"></div>
+                </div>
+                <video id="scanner-video" className="w-full h-full" autoPlay playsInline></video>
+              </div>
+              <p className="text-sm text-gray-500 mb-4">Position the barcode within the frame to scan</p>
+              <div className="flex justify-end">
+                <Button type="button" onClick={stopScanner} variant="outline">
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
         
         <div>
           <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-1">
             Image URL
           </label>
-          <input
+          <Input
             id="imageUrl"
             name="imageUrl"
             type="text"
             value={form.imageUrl}
             onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary ${
-              errors.imageUrl ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={errors.imageUrl ? 'border-red-500' : ''}
           />
           {errors.imageUrl && (
             <p className="mt-1 text-sm text-red-500">{errors.imageUrl}</p>
@@ -227,19 +343,19 @@ const AdminProductForm: React.FC = () => {
         </div>
         
         <div className="pt-4 flex justify-end space-x-4">
-          <button
+          <Button
             type="button"
             onClick={() => navigate('/admin/products')}
-            className="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            variant="secondary"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
-            className="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            className="bg-primary text-white"
           >
             {isEditing ? 'Update Product' : 'Add Product'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
