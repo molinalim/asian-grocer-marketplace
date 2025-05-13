@@ -1,12 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { products, categories } from '@/data/products';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Camera, ScanBarcode } from "lucide-react";
+import { Camera, X } from "lucide-react";
 
 const AdminProductForm: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -26,6 +26,8 @@ const AdminProductForm: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showScanner, setShowScanner] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   
   // Load product data if editing
   useEffect(() => {
@@ -125,14 +127,12 @@ const AdminProductForm: React.FC = () => {
       setStream(mediaStream);
       setShowScanner(true);
 
-      // Create a video element to show the camera feed
-      const videoElement = document.createElement('video');
-      videoElement.setAttribute('autoplay', 'true');
-      videoElement.srcObject = mediaStream;
-      videoElement.onloadedmetadata = () => {
-        videoElement.play();
-        captureBarcode(videoElement);
-      };
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream;
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current?.play();
+        };
+      }
     } catch (error) {
       console.error('Error accessing camera:', error);
       toast({
@@ -143,33 +143,42 @@ const AdminProductForm: React.FC = () => {
     }
   };
 
-  const captureBarcode = (videoElement: HTMLVideoElement) => {
-    const canvas = document.createElement('canvas');
+  const captureImage = () => {
+    if (!videoRef.current || !canvasRef.current) return;
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
-    
-    // This is a simplified approach to demonstrate the concept
-    // In a real app, you would use a proper barcode scanning library
-    const checkForBarcode = setInterval(() => {
-      if (!context || !videoElement.videoWidth) return;
+
+    if (!context) return;
+
+    // Set canvas dimensions to match video
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    // Draw the current video frame onto the canvas
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // For a real OCR implementation, you would send this image to an OCR service
+    // For this demo, we'll simulate finding text in the image with a loading state
+    toast({
+      title: "Processing Image",
+      description: "Scanning for text...",
+    });
+
+    setTimeout(() => {
+      // Simulate OCR result - in a real app, this would come from an OCR API
+      // For demo purposes, we'll generate a random number
+      const randomNum = Math.floor(Math.random() * 9000000000) + 1000000000;
+      setForm(prev => ({ ...prev, barcode: randomNum.toString() }));
       
-      canvas.width = videoElement.videoWidth;
-      canvas.height = videoElement.videoHeight;
-      context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+      toast({
+        title: "Text Detected",
+        description: `Number ${randomNum} has been captured.`,
+      });
       
-      // Simulate barcode detection (in reality, you'd use a proper library)
-      // For demo purposes, we'll wait 3 seconds and generate a fake barcode
-      setTimeout(() => {
-        stopScanner();
-        // Generate a random barcode number for demonstration
-        const demoBarcode = Math.floor(Math.random() * 9000000000) + 1000000000;
-        setForm(prev => ({ ...prev, barcode: demoBarcode.toString() }));
-        toast({
-          title: "Barcode Detected",
-          description: `Barcode ${demoBarcode} has been scanned successfully.`
-        });
-        clearInterval(checkForBarcode);
-      }, 3000);
-    }, 500);
+      stopScanner();
+    }, 1500);
   };
 
   const stopScanner = () => {
@@ -268,7 +277,7 @@ const AdminProductForm: React.FC = () => {
 
         <div>
           <label htmlFor="barcode" className="block text-sm font-medium text-gray-700 mb-1">
-            Barcode
+            Number/ID
           </label>
           <div className="flex items-center space-x-2">
             <Input
@@ -276,7 +285,7 @@ const AdminProductForm: React.FC = () => {
               name="barcode"
               value={form.barcode}
               onChange={handleChange}
-              placeholder="Scan or enter barcode"
+              placeholder="Scan or enter number/ID"
               className="flex-1"
             />
             <Button 
@@ -286,7 +295,7 @@ const AdminProductForm: React.FC = () => {
               variant="outline" 
               className="bg-[#F58634] hover:bg-[#e07a30] text-white"
             >
-              {showScanner ? <ScanBarcode /> : <Camera />}
+              <Camera size={18} />
             </Button>
           </div>
         </div>
@@ -294,17 +303,41 @@ const AdminProductForm: React.FC = () => {
         {showScanner && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
             <div className="bg-white p-4 rounded-lg w-full max-w-lg">
-              <h3 className="text-lg font-medium mb-2">Scan Barcode</h3>
-              <div className="aspect-video bg-gray-100 mb-4 relative">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-64 h-1 bg-red-500 animate-pulse"></div>
-                </div>
-                <video id="scanner-video" className="w-full h-full" autoPlay playsInline></video>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-medium">Scan Text/Number</h3>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={stopScanner} 
+                  className="h-8 w-8 p-0 rounded-full"
+                >
+                  <X size={18} />
+                </Button>
               </div>
-              <p className="text-sm text-gray-500 mb-4">Position the barcode within the frame to scan</p>
-              <div className="flex justify-end">
-                <Button type="button" onClick={stopScanner} variant="outline">
-                  Cancel
+              
+              <div className="relative bg-gray-100 mb-4 rounded overflow-hidden">
+                <video 
+                  ref={videoRef} 
+                  className="w-full aspect-video object-cover" 
+                  autoPlay 
+                  playsInline
+                />
+                <canvas 
+                  ref={canvasRef} 
+                  className="hidden" 
+                />
+                <div className="absolute inset-x-0 top-1/2 h-0.5 bg-green-500 opacity-70"></div>
+                <div className="absolute inset-y-0 left-1/2 w-0.5 bg-green-500 opacity-70"></div>
+              </div>
+              
+              <p className="text-sm text-gray-500 mb-4">Position the text within the frame and take a snapshot</p>
+              
+              <div className="flex justify-center">
+                <Button 
+                  onClick={captureImage} 
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  Capture
                 </Button>
               </div>
             </div>
