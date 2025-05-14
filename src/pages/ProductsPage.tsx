@@ -6,13 +6,15 @@ import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import CategoryFilter from '@/components/CategoryFilter';
 import SearchBar from '@/components/SearchBar';
-import { products, categories } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { fetchProducts, fetchCategories, fetchProductsByCategory } from '@/services/productService';
+import { Category } from '@/components/CategoryFilter';
+import { Product } from '@/components/ProductCard';
+import { useQuery } from '@tanstack/react-query';
 
 const ProductsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filteredProducts, setFilteredProducts] = useState(products);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     searchParams.get('category')
   );
@@ -20,26 +22,33 @@ const ProductsPage: React.FC = () => {
   
   const { addItem } = useCart();
   const { toggleItem } = useWishlist();
+  
+  // Fetch categories
+  const { 
+    data: categories = [], 
+    isLoading: isCategoriesLoading 
+  } = useQuery({
+    queryKey: ['categories'],
+    queryFn: fetchCategories
+  });
 
-  // Filter products when category or search term changes
-  useEffect(() => {
-    let filtered = products;
-    
-    if (selectedCategory) {
-      filtered = filtered.filter(product => product.category === selectedCategory);
-    }
-    
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        product => 
-          product.name.toLowerCase().includes(searchLower) || 
-          product.description.toLowerCase().includes(searchLower)
-      );
-    }
-    
-    setFilteredProducts(filtered);
-  }, [selectedCategory, searchTerm]);
+  // Fetch products based on selected category
+  const { 
+    data: products = [], 
+    isLoading: isProductsLoading 
+  } = useQuery({
+    queryKey: ['products', selectedCategory],
+    queryFn: () => selectedCategory ? fetchProductsByCategory(selectedCategory) : fetchProducts()
+  });
+
+  // Filter products by search term
+  const filteredProducts = searchTerm 
+    ? products.filter(product => {
+        const searchLower = searchTerm.toLowerCase();
+        return product.name.toLowerCase().includes(searchLower) || 
+               product.description.toLowerCase().includes(searchLower);
+      })
+    : products;
 
   // Update URL params when category changes
   useEffect(() => {
@@ -77,18 +86,37 @@ const ProductsPage: React.FC = () => {
             {/* Sidebar Filters */}
             <aside className="w-full md:w-64">
               <div className="bg-white p-4 rounded-lg shadow-sm">
-                <CategoryFilter
-                  categories={categories}
-                  selectedCategory={selectedCategory}
-                  onSelectCategory={handleCategorySelect}
-                />
+                {isCategoriesLoading ? (
+                  <div className="animate-pulse space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                    <div className="h-10 bg-gray-200 rounded"></div>
+                    <div className="h-10 bg-gray-200 rounded"></div>
+                  </div>
+                ) : (
+                  <CategoryFilter
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    onSelectCategory={handleCategorySelect}
+                  />
+                )}
               </div>
             </aside>
             
             {/* Product Grid */}
             <div className="flex-grow">
-              {filteredProducts.length > 0 ? (
-                <div className="product-grid">
+              {isProductsLoading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {[...Array(8)].map((_, i) => (
+                    <div key={i} className="bg-white rounded-lg shadow-md p-4 animate-pulse">
+                      <div className="h-48 bg-gray-200 rounded-md mb-4"></div>
+                      <div className="h-4 bg-gray-200 rounded mb-2 w-3/4"></div>
+                      <div className="h-4 bg-gray-200 rounded mb-4 w-1/2"></div>
+                      <div className="h-10 bg-gray-200 rounded"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : filteredProducts.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {filteredProducts.map((product) => (
                     <ProductCard
                       key={product.id}

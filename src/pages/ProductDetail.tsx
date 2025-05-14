@@ -1,24 +1,71 @@
 
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Heart, ShoppingCart, Package, ArrowLeft } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { products } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
+import { Product } from '@/components/ProductCard';
 
 const ProductDetail: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
+  const navigate = useNavigate();
   const { addItem } = useCart();
   const { toggleItem, isInWishlist } = useWishlist();
   
-  // Find the product with the matching ID
-  const product = products.find(p => p.id === productId);
+  const { data: product, isLoading, isError } = useQuery({
+    queryKey: ['product', productId],
+    queryFn: async (): Promise<Product | null> => {
+      if (!productId) return null;
+      
+      // Fetch product details
+      const { data: productData, error: productError } = await supabase
+        .from('Products')
+        .select(`
+          product_id,
+          name,
+          description,
+          price,
+          sku,
+          category_id,
+          Categories(name)
+        `)
+        .eq('product_id', productId)
+        .single();
+        
+      if (productError) throw new Error(productError.message);
+      if (!productData) return null;
+      
+      // Fetch product images
+      const { data: imageData, error: imageError } = await supabase
+        .from('ProductImages')
+        .select('url, alt_text, is_primary')
+        .eq('product_id', productId)
+        .order('is_primary', { ascending: false });
+        
+      if (imageError) throw new Error(imageError.message);
+      
+      // Find primary image or use the first one
+      const primaryImage = imageData?.find(img => img.is_primary) || imageData?.[0];
+      
+      return {
+        id: productData.product_id,
+        name: productData.name,
+        price: productData.price,
+        description: productData.description || 'No description available',
+        imageUrl: primaryImage?.url || 'https://placehold.co/400?text=No+Image',
+        category: productData.Categories?.name?.toLowerCase() || 'uncategorized',
+        barcode: productData.sku
+      };
+    }
+  });
   
-  // If product not found, display error message
-  if (!product) {
+  // Handle product not found
+  if (isError || (!isLoading && !product)) {
     return (
       <div className="min-h-screen flex flex-col">
         <Navbar />
@@ -29,6 +76,33 @@ const ProductDetail: React.FC = () => {
             <Button asChild>
               <Link to="/products">View All Products</Link>
             </Button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (isLoading || !product) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <div className="container mx-auto px-4 py-12 flex-grow">
+          <div className="animate-pulse">
+            <div className="h-4 bg-gray-200 rounded w-1/4 mb-6"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="h-96 bg-gray-200 rounded-lg"></div>
+              <div className="space-y-4">
+                <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-6 bg-gray-200 rounded w-1/4"></div>
+                <div className="h-px bg-gray-200 my-6"></div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-200 rounded"></div>
+                  <div className="h-4 bg-gray-200 rounded"></div>
+                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <Footer />
@@ -75,7 +149,7 @@ const ProductDetail: React.FC = () => {
             </ol>
           </nav>
           
-          <div className="bg-white p-6 rounded-lg shadow-sm">
+          <div className="bg-white bg-opacity-60 backdrop-blur-md p-6 rounded-lg shadow-sm">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Product Image */}
               <div className="rounded-lg overflow-hidden">
@@ -83,6 +157,9 @@ const ProductDetail: React.FC = () => {
                   src={product.imageUrl}
                   alt={product.name}
                   className="w-full h-auto object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://placehold.co/400?text=No+Image';
+                  }}
                 />
               </div>
               
