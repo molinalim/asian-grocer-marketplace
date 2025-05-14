@@ -1,0 +1,80 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-[#F9FCF7] text-foreground font-poppins;
+  }
+
+  .product-card {
+    @apply bg-white bg-opacity-80 rounded-lg shadow-md p-4 transition-all duration-300 hover:scale-105 hover:shadow-lg;
+  }
+
+  .btn-primary {
+    @apply bg-[#8CC63F] hover:bg-[#7AB62F] text-white px-4 py-2 rounded-full transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-[#F58634] hover:bg-[#E07A30] text-white px-4 py-2 rounded-full transition-colors;
+  }
+
+  .btn-accent {
+    @apply bg-[#C1E8B7] hover:bg-[#AFD6A5] text-[#333333] px-4 py-2 rounded-full transition-colors;
+  }
+
+  .product-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6;
+  }
+  
+  .section-wave {
+    @apply relative;
+  }
+  
+  .section-wave::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-16 bg-no-repeat bg-cover bg-center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V56.44Z' fill='%23F9FCF7'/%3E%3C/svg%3E");
+  }
+}
